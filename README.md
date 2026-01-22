@@ -111,7 +111,7 @@ Utilize as credenciais padrão (e altere-as imediatamente após o login):
 
 | Usuário (E-mail) | Senha | Nível |
 | --- | --- | --- |
-| **admin@municipio.gov.br** | **admin123** | Administrador |
+| **admin@municipio.gov.br** | **admin** | Administrador |
 
 ---
 
