@@ -153,7 +153,3 @@ Contribuições são bem-vindas! Se você tiver melhorias, correções de bugs o
 ## 📄 Licença
 
 Este projeto é de código aberto, licenciado sob a licença [MIT](https://opensource.org/licenses/MIT). Sinta-se livre para usar, modificar e distribuir em seu município.
-
-```
-
-```
