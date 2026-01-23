@@ -17,6 +17,21 @@ A versão 0.2 traz melhorias significativas de segurança e organização:
 * **Perfil de Usuário:** Possibilidade do usuário alterar a própria senha.
 
 ---
+## TELAS
+
+<img width="1920" height="947" alt="Pagina de Consulta Publica" src="https://github.com/user-attachments/assets/5ec5bb9e-353d-48ba-bf88-7ea6b308be4b" />
+
+<img width="1920" height="947" alt="Painel Admin" src="https://github.com/user-attachments/assets/27cb5074-3999-4f97-a58b-a1e50a70db52" />
+
+<img width="1920" height="947" alt="Tela de Login" src="https://github.com/user-attachments/assets/c35a18bd-6783-4a79-ad6a-cbe6b3c19a05" />
+
+<img width="1920" height="947" alt="Alteração de senha" src="https://github.com/user-attachments/assets/a01fb962-59ef-4204-886a-1113ace6ddd7" />
+
+<img width="1920" height="947" alt="Gerenciar Usuários" src="https://github.com/user-attachments/assets/205c5854-c224-4ded-a5a8-ccf256689c5c" />
+
+<img width="1920" height="947" alt="Histórico de Alterações" src="https://github.com/user-attachments/assets/805ca0b6-b227-4202-a08d-de6530df31f4" />
+
+---
 
 ## 🚀 Funcionalidades
 
