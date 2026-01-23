@@ -67,9 +67,15 @@ if (!$edicao) die("Edição não encontrada.");
                 </span>
             </div>
 
-            <a href="index.php" class="btn btn-outline-light btn-sm">
-                <i class="fas fa-arrow-left"></i> <span class="d-none d-sm-inline">Voltar</span>
-            </a>
+            <div class="d-flex align-items-center gap-2">
+                <a href="arquivo.php?id=<?php echo $id; ?>" class="btn btn-light btn-sm" download title="Baixar arquivo PDF">
+                    <i class="fas fa-download"></i> <span class="d-none d-sm-inline">Baixar</span>
+                </a>
+
+                <a href="index.php" class="btn btn-outline-light btn-sm" title="Voltar para a lista">
+                    <i class="fas fa-arrow-left"></i> <span class="d-none d-sm-inline">Voltar</span>
+                </a>
+            </div>
             
         </div>
     </nav>

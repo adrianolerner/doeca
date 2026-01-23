@@ -2,19 +2,20 @@
 
 > Sistema simples, leve e eficiente para gerenciamento e publicação de Diários Oficiais municipais.
 
-O **DOECA** foi desenvolvido para oferecer uma solução gratuita e de fácil manutenção para prefeituras e câmaras municipais que precisam dar transparência aos seus atos oficiais. O sistema conta com uma área pública de fácil leitura com busca textual avançada e um painel administrativo seguro para gestão de edições e usuários.
+O **DOECA** foi desenvolvido para oferecer uma solução gratuita e de fácil manutenção para prefeituras e câmaras municipais que precisam dar transparência aos seus atos oficiais. O sistema conta com uma área pública de fácil leitura com busca textual avançada e um painel administrativo seguro para gestão de edições, usuários e métricas de acesso.
 
 ---
 
-## 🆕 O que há de novo na Versão 0.2 e 0.3
+## 🆕 O que há de novo?
 
-A versão 0.2 e 0.3 eleva o nível de segurança e funcionalidade do sistema:
+As atualizações recentes elevaram o nível de segurança e funcionalidade do sistema:
 
+* **📊 Dashboard Gerencial:** Acompanhamento visual de visitas, downloads e termos mais pesquisados com geração de relatório em PDF.
 * **🔍 Busca Full-Text (OCR/Extração):** O sistema agora lê automaticamente o texto dos PDFs no momento do upload. Isso permite que o cidadão pesquise por leis, decretos ou termos específicos dentro do conteúdo dos documentos.
 * **🛡️ Auditoria e Logs:** Novo módulo administrativo que rastreia todas as ações críticas (quem publicou, quem excluiu, IP e data).
 * **🔒 Segurança de Arquivos:** Bloqueio de acesso direto à pasta `uploads`. Os arquivos agora são servidos via proxy seguro (`arquivo.php`), validando o acesso antes do download.
 * **📂 Armazenamento Inteligente:** Os arquivos são salvos em subpastas organizadas por Ano e Mês (ex: `uploads/2024/01/...`), garantindo performance e organização.
-* **👤 Permissões de Usuário:** Diferenciação real entre **Admin** (controle total e auditoria) e **Editor** (apenas publica/edita).
+* **👤 Permissões de Usuário:** Diferenciação real entre **Admin** (controle total) e **Editor** (apenas publica/edita).
 
 ---
 
@@ -28,10 +29,30 @@ A versão 0.2 e 0.3 eleva o nível de segurança e funcionalidade do sistema:
 
 ### 🔒 Painel Administrativo
 * Autenticação segura com criptografia de senha (Bcrypt).
+* **Dashboard:** Gráficos de acessos, downloads e ranking de pesquisas.
 * **Gestão de Edições:** Upload com extração automática de texto, visualização e exclusão.
 * **Gestão de Usuários:** Cadastro com níveis de permissão.
 * **Auditoria:** Histórico visual (timeline) de todas as alterações.
 * **Segurança:** Bloqueio de ações críticas por usuários não-admin.
+
+---
+
+## 📸 Telas do Sistema
+
+### Área Pública
+<img width="100%" alt="Pagina de Consulta Publica" src="https://github.com/user-attachments/assets/53f9fcba-2600-426b-a23b-52475118d88b" />
+
+### Login e Painel
+<img width="100%" alt="Tela de Login" src="https://github.com/user-attachments/assets/0e55d556-055c-4085-9373-badd9ddd8c03" />
+
+<img width="100%" alt="Painel Admin" src="https://github.com/user-attachments/assets/d7405e84-d101-4836-a673-fc1577fecaa2" />
+
+### Auditoria e Gestão
+<img width="100%" alt="Histórico de Alterações" src="https://github.com/user-attachments/assets/5d28f428-54aa-42d2-8201-14919360fc58" />
+
+<img width="100%" alt="Gerenciar Usuários" src="https://github.com/user-attachments/assets/c6812d45-3949-4c02-af8a-a1630d9fe29c" />
+
+<img width="100%" alt="Alteração de senha" src="https://github.com/user-attachments/assets/aa0bd6ab-8ed7-48e1-8fc3-9baa07707081" />
 
 ---
 
@@ -91,19 +112,20 @@ $pass = 'suasenha';  // Sua senha do MySQL
 
 ### 4. Criar o Banco de Dados
 
-Acesse seu gerenciador (phpMyAdmin, DBeaver) e rode o script SQL completo abaixo:
+Acesse seu gerenciador (phpMyAdmin, DBeaver) e rode o script SQL completo abaixo para criar toda a estrutura necessária:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS doeca_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE doeca_db;
 
--- Tabela de Edições (Com suporte a busca Fulltext)
+-- Tabela de Edições (Com suporte a busca Fulltext e Contagem de Visualizações)
 CREATE TABLE edicoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     numero_edicao VARCHAR(50) NOT NULL,
     data_publicacao DATE NOT NULL,
     arquivo_path VARCHAR(255) NOT NULL,
     conteudo_indexado LONGTEXT,
+    visualizacoes INT DEFAULT 0,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
@@ -129,6 +151,19 @@ CREATE TABLE logs (
     detalhes TEXT,
     ip VARCHAR(45),
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- Tabelas para o Dashboard (Métricas)
+CREATE TABLE visitas_diarias (
+    data_visita DATE PRIMARY KEY,
+    quantidade INT DEFAULT 0
+) ENGINE=InnoDB;
+
+CREATE TABLE termos_pesquisados (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    termo VARCHAR(255) UNIQUE,
+    quantidade INT DEFAULT 1,
+    ultima_busca TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
 -- Usuário Padrão (Senha: admin)
@@ -167,6 +202,7 @@ Utilize as credenciais padrão:
 /doeca
 ├── admin/
 │   ├── index.php        # Painel Principal (Upload e Extração de Texto)
+│   ├── dashboard.php    # (Novo) Dashboard com Gráficos e Relatórios
 │   ├── editar.php       # Edição de publicações
 │   ├── usuarios.php     # Gerenciamento de Usuários
 │   ├── historico.php    # Auditoria e Logs

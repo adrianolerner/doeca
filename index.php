@@ -1,4 +1,19 @@
-<?php require 'config.php'; ?>
+<?php
+require 'config.php';
+// --- ESTATÍSTICAS: Contar Visita Diária ---
+$hoje = date('Y-m-d');
+$pdo->query("INSERT INTO visitas_diarias (data_visita, quantidade) VALUES ('$hoje', 1) ON DUPLICATE KEY UPDATE quantidade = quantidade + 1");
+
+// --- ESTATÍSTICAS: Contar Termo Pesquisado ---
+if (!empty($_GET['busca'])) {
+    $termoBusca = trim($_GET['busca']);
+    // Ignora buscas muito curtas para não sujar o banco
+    if (strlen($termoBusca) > 2) {
+        $stmtTermo = $pdo->prepare("INSERT INTO termos_pesquisados (termo, quantidade) VALUES (?, 1) ON DUPLICATE KEY UPDATE quantidade = quantidade + 1");
+        $stmtTermo->execute([$termoBusca]);
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -19,16 +34,20 @@
 
         /* O grupo que une input e botão */
         .search-input-group {
-            border-radius: 50px; /* Formato pílula */
-            overflow: hidden;    /* Garante que o botão não vaze as bordas */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            border-radius: 50px;
+            /* Formato pílula */
+            overflow: hidden;
+            /* Garante que o botão não vaze as bordas */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            /* Sombra suave */
             border: 1px solid #dfe1e5;
             transition: all 0.3s ease;
         }
 
         /* Efeito de foco em todo o grupo */
         .search-input-group:focus-within {
-            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.25); /* Sombra azulada */
+            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.25);
+            /* Sombra azulada */
             border-color: #0d6efd;
         }
 
@@ -38,14 +57,16 @@
             padding: 15px 25px;
             font-size: 1.1rem;
         }
-        
+
         .search-form-control:focus {
-            box-shadow: none; /* Remove o brilho padrão do bootstrap */
+            box-shadow: none;
+            /* Remove o brilho padrão do bootstrap */
         }
 
         /* O botão de ação à direita */
         .btn-search-custom {
-            background-color: #0d6efd; /* Azul Bootstrap */
+            background-color: #0d6efd;
+            /* Azul Bootstrap */
             color: white;
             padding: 0 30px;
             font-weight: 600;
@@ -54,11 +75,13 @@
             transition: background-color 0.2s;
             display: flex;
             align-items: center;
-            gap: 8px; /* Espaço entre ícone e texto */
+            gap: 8px;
+            /* Espaço entre ícone e texto */
         }
 
         .btn-search-custom:hover {
-            background-color: #0b5ed7; /* Azul mais escuro */
+            background-color: #0b5ed7;
+            /* Azul mais escuro */
             color: white;
         }
 
@@ -91,10 +114,10 @@
 
             <form method="GET" action="index.php" class="search-container">
                 <div class="input-group search-input-group">
-                    <input type="text" name="busca" class="form-control search-form-control" 
-                           placeholder="Digite o que procura (ex: Lei, Decreto, Data)..." 
-                           value="<?php echo htmlspecialchars($_GET['busca'] ?? ''); ?>" required>
-                    
+                    <input type="text" name="busca" class="form-control search-form-control"
+                        placeholder="Digite o que procura (ex: Lei, Decreto, Data)..."
+                        value="<?php echo htmlspecialchars($_GET['busca'] ?? ''); ?>" required>
+
                     <button type="submit" class="btn btn-search-custom">
                         <i class="fas fa-search"></i> PESQUISAR
                     </button>
@@ -105,11 +128,12 @@
 
         <div class="card card-custom bg-white">
             <div class="card-body p-4">
-                
+
                 <?php if (!empty($_GET['busca'])): ?>
                     <div class="alert alert-info d-flex align-items-center justify-content-between mb-3">
                         <span>
-                            <i class="fas fa-filter me-2"></i> Exibindo resultados para: <strong><?php echo htmlspecialchars($_GET['busca']); ?></strong>
+                            <i class="fas fa-filter me-2"></i> Exibindo resultados para:
+                            <strong><?php echo htmlspecialchars($_GET['busca']); ?></strong>
                         </span>
                         <a href="index.php" class="btn btn-sm btn-outline-dark">Limpar Filtro</a>
                     </div>
@@ -136,7 +160,7 @@
                                         WHERE numero_edicao LIKE :termoLike 
                                         OR MATCH(conteudo_indexado) AGAINST (:termo IN BOOLEAN MODE)
                                         ORDER BY data_publicacao DESC";
-                                
+
                                 $stmt = $pdo->prepare($sql);
                                 $stmt->execute([
                                     ':termo' => $termo,
@@ -144,7 +168,7 @@
                                 ]);
                             } else {
                                 // LISTAGEM PADRÃO
-                                $stmt = $pdo->query("SELECT * FROM edicoes ORDER BY data_publicacao DESC, id DESC LIMIT 100"); 
+                                $stmt = $pdo->query("SELECT * FROM edicoes ORDER BY data_publicacao DESC, id DESC LIMIT 100");
                             }
 
                             // Verifica se encontrou algo
@@ -154,17 +178,17 @@
                                 $temResultados = true;
                                 $dataPub = date('d/m/Y', strtotime($row['data_publicacao']));
                                 $dataUp = date('d/m/Y H:i', strtotime($row['criado_em']));
-                                
+
                                 echo "<tr>
                                         <td><strong>{$row['numero_edicao']}</strong></td>
                                         <td>{$dataPub}</td>
                                         <td>{$dataUp}</td>
                                         <td class='text-center'>
                                             <a href='visualizar.php?id={$row['id']}' class='btn btn-sm btn-info text-white me-1' title='Visualizar'>
-                                                <i class='fas fa-eye'></i> Ler
+                                                <i class='fas fa-eye'></i> Visualizar
                                             </a>
                                             <a href='arquivo.php?id={$row['id']}' download class='btn btn-sm btn-secondary' title='Baixar PDF'>
-                                                <i class='fas fa-download'></i>
+                                                <i class='fas fa-download'></i> Baixar
                                             </a>
                                         </td>
                                       </tr>";
@@ -172,7 +196,7 @@
                             ?>
                         </tbody>
                     </table>
-                    
+
                     <?php if (!$temResultados && !empty($termo)): ?>
                         <div class="text-center py-5 text-muted">
                             <i class="fas fa-file-excel fa-3x mb-3"></i>
@@ -204,7 +228,7 @@
                 },
                 order: [
                     [1, "desc"]
-                ] 
+                ]
             });
         });
     </script>

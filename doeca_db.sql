@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 23/01/2026 às 18:17
+-- Tempo de geração: 23/01/2026 às 21:28
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `doeca_db`
 --
+CREATE DATABASE IF NOT EXISTS `doeca_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `doeca_db`;
 
 -- --------------------------------------------------------
 
@@ -33,7 +35,8 @@ CREATE TABLE `edicoes` (
   `data_publicacao` date NOT NULL,
   `arquivo_path` varchar(255) NOT NULL,
   `criado_em` timestamp NOT NULL DEFAULT current_timestamp(),
-  `conteudo_indexado` longtext DEFAULT NULL
+  `conteudo_indexado` longtext DEFAULT NULL,
+  `visualizacoes` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -55,6 +58,19 @@ CREATE TABLE `logs` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `termos_pesquisados`
+--
+
+CREATE TABLE `termos_pesquisados` (
+  `id` int(11) NOT NULL,
+  `termo` varchar(255) DEFAULT NULL,
+  `quantidade` int(11) DEFAULT 1,
+  `ultima_busca` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `usuarios`
 --
 
@@ -67,13 +83,16 @@ CREATE TABLE `usuarios` (
   `criado_em` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Despejando dados para a tabela `usuarios`
+-- Estrutura para tabela `visitas_diarias`
 --
 
-INSERT INTO `usuarios` (`id`, `nome`, `email`, `senha`, `nivel`, `criado_em`) VALUES
-(1, 'Administrador', 'admin@municipio.gov.br', '$2y$10$OSzVz6E6vdRVzhZW3jzS7u9DIJgt/s9MxoW6pBILcGu7JatFcCZJm', 'admin', '2026-01-22 18:26:39'),
-(2, 'Editor', 'editor@municipio.gov.br', '$2y$10$Le2JWZ5Z0ThOORmIOXHgJeYy5arK2NJ2HNpe7aMaf1DcxFVgGHa3q', 'editor', '2026-01-23 10:40:45');
+CREATE TABLE `visitas_diarias` (
+  `data_visita` date NOT NULL,
+  `quantidade` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Índices para tabelas despejadas
@@ -93,11 +112,24 @@ ALTER TABLE `logs`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Índices de tabela `termos_pesquisados`
+--
+ALTER TABLE `termos_pesquisados`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `termo` (`termo`);
+
+--
 -- Índices de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Índices de tabela `visitas_diarias`
+--
+ALTER TABLE `visitas_diarias`
+  ADD PRIMARY KEY (`data_visita`);
 
 --
 -- AUTO_INCREMENT para tabelas despejadas
@@ -107,7 +139,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de tabela `edicoes`
 --
 ALTER TABLE `edicoes`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `logs`
@@ -116,10 +148,16 @@ ALTER TABLE `logs`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de tabela `termos_pesquisados`
+--
+ALTER TABLE `termos_pesquisados`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
