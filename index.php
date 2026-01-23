@@ -11,40 +11,58 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <style>
-        /* Estilo Google-like para a barra de pesquisa */
+        /* Container centralizado */
         .search-container {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
-            position: relative;
         }
 
-        .google-search-bar {
-            border-radius: 50px;
-            /* Bordas bem arredondadas */
-            padding: 12px 20px 12px 50px;
-            /* Espaço para o ícone */
+        /* O grupo que une input e botão */
+        .search-input-group {
+            border-radius: 50px; /* Formato pílula */
+            overflow: hidden;    /* Garante que o botão não vaze as bordas */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
             border: 1px solid #dfe1e5;
-            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+        }
+
+        /* Efeito de foco em todo o grupo */
+        .search-input-group:focus-within {
+            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.25); /* Sombra azulada */
+            border-color: #0d6efd;
+        }
+
+        /* O campo de texto */
+        .search-form-control {
+            border: none;
+            padding: 15px 25px;
             font-size: 1.1rem;
         }
-
-        .google-search-bar:focus {
-            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.4);
-            border-color: transparent;
-            outline: none;
+        
+        .search-form-control:focus {
+            box-shadow: none; /* Remove o brilho padrão do bootstrap */
         }
 
-        .search-icon {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #9aa0a6;
-            font-size: 1.2rem;
+        /* O botão de ação à direita */
+        .btn-search-custom {
+            background-color: #0d6efd; /* Azul Bootstrap */
+            color: white;
+            padding: 0 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Espaço entre ícone e texto */
         }
 
-        /* Ajuste do card para combinar com o admin */
+        .btn-search-custom:hover {
+            background-color: #0b5ed7; /* Azul mais escuro */
+            color: white;
+        }
+
+        /* Ajuste do card da tabela */
         .card-custom {
             border: none;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
@@ -69,16 +87,34 @@
 
         <div class="text-center mb-5 mt-4">
             <h2 class="text-primary mb-4 fw-bold">Consulta de Diários Oficiais</h2>
+            <p class="text-muted mb-4">Pesquise por número da edição, ano, ou termos dentro dos documentos.</p>
 
-            <div class="search-container">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" id="customSearch" class="form-control google-search-bar"
-                    placeholder="Pesquise por número, ano ou data...">
-            </div>
+            <form method="GET" action="index.php" class="search-container">
+                <div class="input-group search-input-group">
+                    <input type="text" name="busca" class="form-control search-form-control" 
+                           placeholder="Digite o que procura (ex: Lei, Decreto, Data)..." 
+                           value="<?php echo htmlspecialchars($_GET['busca'] ?? ''); ?>" required>
+                    
+                    <button type="submit" class="btn btn-search-custom">
+                        <i class="fas fa-search"></i> PESQUISAR
+                    </button>
+                </div>
+            </form>
+
         </div>
 
         <div class="card card-custom bg-white">
             <div class="card-body p-4">
+                
+                <?php if (!empty($_GET['busca'])): ?>
+                    <div class="alert alert-info d-flex align-items-center justify-content-between mb-3">
+                        <span>
+                            <i class="fas fa-filter me-2"></i> Exibindo resultados para: <strong><?php echo htmlspecialchars($_GET['busca']); ?></strong>
+                        </span>
+                        <a href="index.php" class="btn btn-sm btn-outline-dark">Limpar Filtro</a>
+                    </div>
+                <?php endif; ?>
+
                 <div class="table-responsive">
                     <table id="tabelaDiario" class="table table-striped table-hover" style="width:100%">
                         <thead class="table-dark">
@@ -91,20 +127,44 @@
                         </thead>
                         <tbody>
                             <?php
-                            $stmt = $pdo->query("SELECT * FROM edicoes ORDER BY data_publicacao DESC, id DESC");
+                            $termo = $_GET['busca'] ?? '';
+
+                            if (!empty($termo)) {
+                                // BUSCA AVANÇADA (FULLTEXT)
+                                $sql = "SELECT *, MATCH(conteudo_indexado) AGAINST (:termo IN BOOLEAN MODE) as relevancia 
+                                        FROM edicoes 
+                                        WHERE numero_edicao LIKE :termoLike 
+                                        OR MATCH(conteudo_indexado) AGAINST (:termo IN BOOLEAN MODE)
+                                        ORDER BY data_publicacao DESC";
+                                
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute([
+                                    ':termo' => $termo,
+                                    ':termoLike' => "%$termo%"
+                                ]);
+                            } else {
+                                // LISTAGEM PADRÃO
+                                $stmt = $pdo->query("SELECT * FROM edicoes ORDER BY data_publicacao DESC, id DESC LIMIT 100"); 
+                            }
+
+                            // Verifica se encontrou algo
+                            $temResultados = false;
+
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                $temResultados = true;
                                 $dataPub = date('d/m/Y', strtotime($row['data_publicacao']));
                                 $dataUp = date('d/m/Y H:i', strtotime($row['criado_em']));
+                                
                                 echo "<tr>
                                         <td><strong>{$row['numero_edicao']}</strong></td>
                                         <td>{$dataPub}</td>
                                         <td>{$dataUp}</td>
                                         <td class='text-center'>
                                             <a href='visualizar.php?id={$row['id']}' class='btn btn-sm btn-info text-white me-1' title='Visualizar'>
-                                                <i class='fas fa-eye'></i> Ler Edição
+                                                <i class='fas fa-eye'></i> Ler
                                             </a>
                                             <a href='arquivo.php?id={$row['id']}' download class='btn btn-sm btn-secondary' title='Baixar PDF'>
-                                                <i class='fas fa-download'></i> Baixar Edição
+                                                <i class='fas fa-download'></i>
                                             </a>
                                         </td>
                                       </tr>";
@@ -112,6 +172,13 @@
                             ?>
                         </tbody>
                     </table>
+                    
+                    <?php if (!$temResultados && !empty($termo)): ?>
+                        <div class="text-center py-5 text-muted">
+                            <i class="fas fa-file-excel fa-3x mb-3"></i>
+                            <p>Nenhum documento encontrado para sua pesquisa.</p>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -129,22 +196,15 @@
 
     <script>
         $(document).ready(function () {
-            // Inicializa o DataTables
-            var table = $('#tabelaDiario').DataTable({
-                // 'lrtip' define os elementos que aparecem
-                // removido o 'f' para usar a busca customizada
+            $('#tabelaDiario').DataTable({
+                // Configuração para esconder a busca padrão e paginação
                 dom: '<"row mb-3"<"col-md-6"l>>rtip',
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json'
                 },
                 order: [
                     [1, "desc"]
-                ] // Ordena pela data de publicação decrescente
-            });
-
-            // Lógica da Barra de Pesquisa Personalizada "Google Style"
-            $('#customSearch').on('keyup', function () {
-                table.search(this.value).draw();
+                ] 
             });
         });
     </script>

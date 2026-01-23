@@ -2,6 +2,8 @@
 require 'auth.php';
 require '../config.php';
 require 'logger.php';
+require '../vendor/autoload.php';
+use Smalot\PdfParser\Parser;
 
 $msg = "";
 
@@ -11,7 +13,7 @@ if (isset($_GET['excluir'])) {
         $msg = "<div class='alert alert-danger'>Acesso negado. Apenas administradores podem excluir.</div>";
     } else {
         $id = (int) $_GET['excluir'];
-        
+
         // CORREÇÃO AQUI: Adicionado 'numero_edicao' ao SELECT
         $stmt = $pdo->prepare("SELECT arquivo_path, numero_edicao FROM edicoes WHERE id = ?");
         $stmt->execute([$id]);
@@ -19,13 +21,13 @@ if (isset($_GET['excluir'])) {
 
         if ($edicao) {
             $caminhoArquivo = "../uploads/" . $edicao['arquivo_path'];
-            
+
             // Prepara a exclusão
             $stmtDelete = $pdo->prepare("DELETE FROM edicoes WHERE id = ?");
-            
+
             // Registra o log ANTES de confirmar a exclusão visual, mas agora com o dado correto
             registrarLog($pdo, 'Exclusão', "Edição " . $edicao['numero_edicao'], "ID: $id excluído");
-            
+
             if ($stmtDelete->execute([$id])) {
                 // Remove o arquivo físico
                 if (file_exists($caminhoArquivo) && is_file($caminhoArquivo)) {
@@ -61,14 +63,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['pdf_file'])) {
         $caminhoParaBanco = $pastaRelativa . $novoNome;
 
         if (move_uploaded_file($_FILES['pdf_file']['tmp_name'], $destino)) {
-            $sql = "INSERT INTO edicoes (numero_edicao, data_publicacao, arquivo_path) VALUES (?, ?, ?)";
+
+            // --- NOVO: Extração de Texto ---
+            $conteudoTexto = "";
+            try {
+                $parser = new Parser();
+                $pdf = $parser->parseFile($destino);
+                $conteudoTexto = $pdf->getText();
+            } catch (Exception $e) {
+                // Se der erro ao ler o PDF, segue o baile (salva vazio), mas loga o erro
+                // Opcional: registrarLog($pdo, 'Erro OCR', "Edição $numero", $e->getMessage());
+            }
+            // -------------------------------
+
+            // SQL atualizada para incluir conteudo_indexado
+            $sql = "INSERT INTO edicoes (numero_edicao, data_publicacao, arquivo_path, conteudo_indexado) VALUES (?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$numero, $data, $caminhoParaBanco]);
-            
-            // Log de publicação
+            $stmt->execute([$numero, $data, $caminhoParaBanco, $conteudoTexto]); // <--- Passando o texto aqui
+
             registrarLog($pdo, 'Publicação', "Edição $numero", "Arquivo: $novoNome");
-            
-            $msg = "<div class='alert alert-success'>Publicado com sucesso!</div>";
+            $msg = "<div class='alert alert-success'>Publicado e indexado com sucesso!</div>";
         }
     } else {
         $msg = "<div class='alert alert-warning'>Apenas PDF permitido.</div>";
@@ -96,7 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['pdf_file'])) {
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link active fw-bold text-warning" href="index.php">Publicações</a></li>
+                <li class="nav-item"><a class="nav-link active fw-bold text-warning" href="index.php">Publicações</a>
+                </li>
                 <?php if ($_SESSION['usuario_nivel'] === 'admin'): ?>
                     <li class="nav-item"><a class="nav-link" href="usuarios.php">Gerenciar Usuários</a></li>
                     <li class="nav-item"><a class="nav-link" href="historico.php">Auditoria</a></li>
@@ -170,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['pdf_file'])) {
                                     $stmt = $pdo->query("SELECT * FROM edicoes ORDER BY data_publicacao DESC, id DESC");
                                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         $dataPub = date('d/m/Y', strtotime($row['data_publicacao']));
-                                        
+
                                         // Usa ../arquivo.php para download seguro também no admin
                                         $linkPdf = "../arquivo.php?id={$row['id']}";
 
