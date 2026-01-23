@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 23/01/2026 às 14:32
+-- Tempo de geração: 23/01/2026 às 18:17
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -32,7 +32,8 @@ CREATE TABLE `edicoes` (
   `numero_edicao` varchar(50) NOT NULL,
   `data_publicacao` date NOT NULL,
   `arquivo_path` varchar(255) NOT NULL,
-  `criado_em` timestamp NOT NULL DEFAULT current_timestamp()
+  `criado_em` timestamp NOT NULL DEFAULT current_timestamp(),
+  `conteudo_indexado` longtext DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -83,6 +84,7 @@ INSERT INTO `usuarios` (`id`, `nome`, `email`, `senha`, `nivel`, `criado_em`) VA
 --
 ALTER TABLE `edicoes`
   ADD PRIMARY KEY (`id`);
+ALTER TABLE `edicoes` ADD FULLTEXT KEY `conteudo_indexado` (`conteudo_indexado`);
 
 --
 -- Índices de tabela `logs`
@@ -105,13 +107,13 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de tabela `edicoes`
 --
 ALTER TABLE `edicoes`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de tabela `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`
