@@ -56,7 +56,7 @@ Siga os passos abaixo para colocar o sistema no ar:
 Faça o download dos arquivos e coloque na pasta pública do seu servidor (ex: `htdocs` ou `www`).
 
 ```bash
-git clone https://seu-repositorio/doeca.git
+git clone https://github.com/adrianolerner/doeca/doeca.git
 cd doeca
 
 ```
