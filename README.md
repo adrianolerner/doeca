@@ -66,6 +66,9 @@ As atualizações recentes elevaram o nível de segurança e funcionalidade do s
 
 <img width="100%" alt="Alteração de senha" src="https://github.com/user-attachments/assets/aa0bd6ab-8ed7-48e1-8fc3-9baa07707081" />
 
+### Dashboard gerencial
+<img width="1920" height="1289" alt="Dashboard" src="https://github.com/user-attachments/assets/80ed9d3d-934e-41f7-9d57-f5d5f1ef4eae" />
+
 ---
 
 ## 🛠️ Requisitos do Servidor
