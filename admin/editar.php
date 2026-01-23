@@ -78,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmtUpdate->execute([$numero, $data, $id]);
         registrarLog($pdo, 'Edição', "Edição $numero", "Dados atualizados via formulário");
         $msg = "<div class='alert alert-success'>Dados atualizados com sucesso!</div>";
+        header( "refresh:5; url=index.php" );
     }
 
     // Atualiza variaveis locais
@@ -123,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <label class="form-label">Substituir Arquivo PDF (Opcional)</label>
                                 <input type="file" name="pdf_file" class="form-control" accept=".pdf">
                                 <div class="form-text">Arquivo atual: <a
-                                        href="../uploads/<?php echo $edicao['arquivo_path']; ?>"
+                                        href="../arquivo.php?id=<?php echo $id; ?>"
                                         target="_blank">Visualizar PDF Atual</a></div>
                             </div>
 
