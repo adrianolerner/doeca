@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 22/01/2026 às 21:02
+-- Tempo de geração: 23/01/2026 às 14:32
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -28,10 +28,26 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `edicoes` (
-  `id` int(11) NOT NULL,
+  `id` int(50) NOT NULL,
   `numero_edicao` varchar(50) NOT NULL,
   `data_publicacao` date NOT NULL,
   `arquivo_path` varchar(255) NOT NULL,
+  `criado_em` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `logs`
+--
+
+CREATE TABLE `logs` (
+  `id` int(11) NOT NULL,
+  `usuario_nome` varchar(100) DEFAULT NULL,
+  `acao` varchar(50) DEFAULT NULL,
+  `alvo` varchar(255) DEFAULT NULL,
+  `detalhes` text DEFAULT NULL,
+  `ip` varchar(45) DEFAULT NULL,
   `criado_em` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -55,7 +71,8 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nome`, `email`, `senha`, `nivel`, `criado_em`) VALUES
-(1, 'Administrador', 'admin@municipio.gov.br', '$2y$10$OSzVz6E6vdRVzhZW3jzS7u9DIJgt/s9MxoW6pBILcGu7JatFcCZJm', 'admin', '2026-01-22 18:26:39');
+(1, 'Administrador', 'admin@municipio.gov.br', '$2y$10$OSzVz6E6vdRVzhZW3jzS7u9DIJgt/s9MxoW6pBILcGu7JatFcCZJm', 'admin', '2026-01-22 18:26:39'),
+(2, 'Editor', 'editor@municipio.gov.br', '$2y$10$Le2JWZ5Z0ThOORmIOXHgJeYy5arK2NJ2HNpe7aMaf1DcxFVgGHa3q', 'editor', '2026-01-23 10:40:45');
 
 --
 -- Índices para tabelas despejadas
@@ -65,6 +82,12 @@ INSERT INTO `usuarios` (`id`, `nome`, `email`, `senha`, `nivel`, `criado_em`) VA
 -- Índices de tabela `edicoes`
 --
 ALTER TABLE `edicoes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices de tabela `logs`
+--
+ALTER TABLE `logs`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -82,13 +105,19 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de tabela `edicoes`
 --
 ALTER TABLE `edicoes`
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT de tabela `logs`
+--
+ALTER TABLE `logs`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

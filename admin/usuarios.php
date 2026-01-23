@@ -1,5 +1,6 @@
 <?php
 require 'auth.php'; // Protege a página
+require 'logger.php';
 verificarAdmin();   // Garante que é ADMIN
 require '../config.php';
 
@@ -7,7 +8,7 @@ $msg = "";
 
 // --- LÓGICA DE EXCLUSÃO ---
 if (isset($_GET['excluir'])) {
-    $idExcluir = (int)$_GET['excluir'];
+    $idExcluir = (int) $_GET['excluir'];
 
     // Proteção: Não permitir excluir o próprio usuário logado
     if ($idExcluir == $_SESSION['usuario_id']) {
@@ -15,6 +16,7 @@ if (isset($_GET['excluir'])) {
     } else {
         $stmtDelete = $pdo->prepare("DELETE FROM usuarios WHERE id = ?");
         if ($stmtDelete->execute([$idExcluir])) {
+            registrarLog($pdo, 'Apagar Usuário', "Painel Admin", "Usuário apagado com sucesso!");
             $msg = "<div class='alert alert-success alert-dismissible fade show'>Usuário excluído com sucesso! <button type='button' class='btn-close' data-bs-dismiss='alert'></button></div>";
         } else {
             $msg = "<div class='alert alert-danger'>Erro ao excluir usuário.</div>";
@@ -24,7 +26,7 @@ if (isset($_GET['excluir'])) {
 
 // --- LÓGICA DE CADASTRO ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
-    $nome  = trim($_POST['nome']);
+    $nome = trim($_POST['nome']);
     $email = trim($_POST['email']);
     $nivel = $_POST['nivel'];
     $senha = $_POST['senha'];
@@ -35,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
         try {
             $stmt = $pdo->prepare("INSERT INTO usuarios (nome, email, senha, nivel) VALUES (?, ?, ?, ?)");
             $stmt->execute([$nome, $email, $senhaHash, $nivel]);
+            registrarLog($pdo, 'Criar Usuário', "Painel Admin", "Usuário criado com sucesso!");
             $msg = "<div class='alert alert-success alert-dismissible fade show'>Usuário cadastrado com sucesso! <button type='button' class='btn-close' data-bs-dismiss='alert'></button></div>";
         } catch (PDOException $e) {
             $msg = "<div class='alert alert-danger'>Erro: E-mail já cadastrado ou dados inválidos.</div>";
@@ -47,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Gerenciar Usuários - DOECA</title>
@@ -54,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-light">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 px-3">
@@ -64,9 +69,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="index.php">Publicações</a></li>
-                <li class="nav-item"><a class="nav-link active" href="usuarios.php">Gerenciar Usuários</a></li>
+                <li class="nav-item"><a class="nav-link active fw-bold text-warning" href="usuarios.php">Gerenciar Usuários</a></li>
+                <li class="nav-item"><a class="nav-link" href="historico.php">Auditoria</a></li>
             </ul>
-            <span class="navbar-text me-3 text-white">Olá, <?php echo htmlspecialchars($_SESSION['usuario_nome']); ?></span>
+            <span class="navbar-text me-3 text-white">
+                <a href="perfil.php" class="navbar-text me-3 text-white text-decoration-none"
+                    title="Alterar minha senha">
+                    <i class="fas fa-user-circle"></i> Olá, <?php echo htmlspecialchars($_SESSION['usuario_nome']); ?>
+                </a></span>
             <a href="logout.php" class="btn btn-outline-danger btn-sm">Sair</a>
         </div>
     </nav>
@@ -128,11 +138,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
                                     <?php
                                     $stmt = $pdo->query("SELECT id, nome, email, nivel FROM usuarios ORDER BY nome ASC");
                                     while ($u = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                        $badge = ($u['nivel']=='admin') ? 'bg-danger' : 'bg-info';
-                                        
+                                        $badge = ($u['nivel'] == 'admin') ? 'bg-danger' : 'bg-info';
+
                                         // Ações
                                         $botoes = "";
-                                        
+
                                         // Botão Editar
                                         $botoes .= "<a href='editar_usuario.php?id={$u['id']}' class='btn btn-sm btn-warning me-1' title='Editar'><i class='fas fa-edit'></i></a>";
 
@@ -142,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
                                         } else {
                                             $botoes .= "<a href='usuarios.php?excluir={$u['id']}' class='btn btn-sm btn-danger' title='Excluir' onclick=\"return confirm('Tem certeza que deseja excluir o usuário {$u['nome']}?');\"><i class='fas fa-trash'></i></a>";
                                         }
-                                        
+
                                         echo "<tr>
                                                 <td>" . htmlspecialchars($u['nome']) . "</td>
                                                 <td>" . htmlspecialchars($u['email']) . "</td>
@@ -159,18 +169,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
             </div>
         </div>
     </div>
-
+    <footer class="text-center mt-5 py-4 text-muted">
+        <small>©
+            <?php echo date('Y'); ?> Adriano Lerner Biesek | Prefeitura Municipal de Castro (PR)<br>Feito com <i
+                class="fa fa-heart text-danger"></i> para o serviço público.
+        </small>
+    </footer>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-    
+
     <script>
         $(document).ready(function () {
             $('#tabelaUsuarios').DataTable({
-                language: { url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json' }
+                language: { url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json' }
             });
         });
     </script>
 </body>
+
 </html>

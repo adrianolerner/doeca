@@ -6,19 +6,32 @@ O **DOECA** foi desenvolvido para oferecer uma solução gratuita e de fácil ma
 
 ---
 
+## 🆕 O que há de novo na Versão 0.2
+
+A versão 0.2 traz melhorias significativas de segurança e organização:
+* **Auditoria e Logs:** Novo módulo para rastrear todas as ações (quem publicou, quem excluiu, IP e data).
+* **Segurança de Arquivos:** Bloqueio de acesso direto à pasta `uploads`. Os arquivos agora são servidos via proxy seguro (`arquivo.php`) validando o ID no banco.
+* **Armazenamento Inteligente:** Os arquivos agora são salvos em subpastas organizadas por Ano e Mês (`uploads/2023/10/...`), melhorando a performance do servidor.
+* **Permissões de Usuário:** Diferenciação real entre `Admin` (controle total) e `Editor` (apenas publica).
+* **Busca Melhorada:** Nova barra de pesquisa estilo "Google" na página inicial.
+* **Perfil de Usuário:** Possibilidade do usuário alterar a própria senha.
+
+---
+
 ## 🚀 Funcionalidades
 
 ### 🌍 Área Pública
-- Listagem organizada de diários com **DataTables** (Busca, Paginação e Filtros).
-- Visualizador de PDF integrado (Leitura sem sair do site).
-- Design responsivo (Mobile-friendly) com **Bootstrap 5**.
-- Botão de Download direto.
+- Listagem organizada de diários com **DataTables**.
+- **Barra de Pesquisa Global:** Estilo minimalista e centralizado.
+- Visualizador de PDF integrado (Leitura sem sair do site, responsivo via Flexbox).
+- Botão de Download seguro.
 
 ### 🔒 Painel Administrativo
 - Autenticação segura com criptografia de senha (Bcrypt).
-- **Gestão de Edições:** Upload de PDFs, edição de dados e exclusão (com limpeza automática de arquivos).
-- **Gestão de Usuários:** Cadastro de múltiplos usuários com níveis de permissão (`Admin` e `Editor`).
-- Proteção contra acesso não autorizado.
+- **Gestão de Edições:** Upload, visualização e exclusão lógica + física.
+- **Gestão de Usuários:** Cadastro com níveis de permissão.
+- **Auditoria:** Histórico visual de alterações no sistema.
+- **Proteção:** Bloqueio de editores para ações destrutivas (Excluir edições/usuários).
 
 ---
 
@@ -28,7 +41,7 @@ Para rodar o DOECA, você precisará de um servidor web básico com suporte a PH
 
 - **PHP:** Versão 7.4 ou superior (Recomendado 8.0+).
 - **Banco de Dados:** MySQL ou MariaDB.
-- **Servidor Web:** Apache (com `mod_rewrite` opcional) ou Nginx.
+- **Servidor Web:** Apache (Recomendado para proteção `.htaccess`) ou Nginx.
 - **Extensões PHP:** `pdo_mysql`.
 
 *Funciona perfeitamente em ambientes locais como XAMPP, Laragon ou WampServer.*
@@ -50,7 +63,7 @@ cd doeca
 
 ### 2. Criar o Banco de Dados
 
-Acesse seu gerenciador de banco de dados (phpMyAdmin, DBeaver, etc), crie um banco chamado `doeca_db` e execute o seguinte script SQL:
+Acesse seu gerenciador de banco de dados (phpMyAdmin, DBeaver, etc), crie um banco chamado `doeca_db` e execute o seguinte script SQL atualizado:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS doeca_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -75,7 +88,19 @@ CREATE TABLE usuarios (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Usuário Padrão (Senha: admin123)
+-- Tabela de Logs (NOVO NA V0.2)
+CREATE TABLE logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_nome VARCHAR(100),
+    acao VARCHAR(50),
+    alvo VARCHAR(255),
+    detalhes TEXT,
+    ip VARCHAR(45),
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Usuário Padrão (Senha: admin)
+-- Hash atualizado para a senha 'admin'
 INSERT INTO usuarios (nome, email, senha, nivel) VALUES 
 ('Administrador', 'admin@municipio.gov.br', '$2y$10$OSzVz6E6vdRVzhZW3jzS7u9DIJgt/s9MxoW6pBILcGu7JatFcCZJm', 'admin');
 
@@ -95,10 +120,8 @@ $pass = '';     // Sua senha do MySQL
 
 ### 4. Permissões de Pasta
 
-Certifique-se de que a pasta `uploads/` tenha permissão de **escrita** para que o PHP possa salvar os PDFs.
-
-* **Linux/Mac:** `chmod -R 777 uploads/` (ou `755` dependendo do user do Apache).
-* **Windows:** Geralmente já vem liberado.
+1. Certifique-se de que a pasta `uploads/` tenha permissão de **escrita** (chmod 777 ou 755).
+2. O sistema criará automaticamente subpastas (ex: `uploads/2024/01/`) e copiará o arquivo `.htaccess` de proteção para dentro delas.
 
 ---
 
@@ -107,11 +130,13 @@ Certifique-se de que a pasta `uploads/` tenha permissão de **escrita** para que
 Após a instalação, acesse a área administrativa em:
 `http://seusite/doeca/admin`
 
-Utilize as credenciais padrão (e altere-as imediatamente após o login):
+Utilize as credenciais padrão:
 
 | Usuário (E-mail) | Senha | Nível |
 | --- | --- | --- |
 | **admin@municipio.gov.br** | **admin** | Administrador |
+
+> **Importante:** Vá em "Olá, Administrador" > "Alterar Senha" imediatamente após o primeiro login.
 
 ---
 
@@ -120,17 +145,21 @@ Utilize as credenciais padrão (e altere-as imediatamente após o login):
 ```text
 /doeca
 ├── admin/
-│   ├── index.php        # Painel Principal (CRUD Edições)
+│   ├── index.php        # Painel Principal (Upload/Listagem)
 │   ├── editar.php       # Edição de publicações
-│   ├── usuarios.php     # Gerenciamento de Usuários (CRUD)
+│   ├── usuarios.php     # Gerenciamento de Usuários
 │   ├── editar_usuario.php
+│   ├── historico.php    # (Novo) Auditoria e Logs
+│   ├── logger.php       # (Novo) Função de registro de logs
+│   ├── perfil.php       # (Novo) Alteração de senha
 │   ├── login.php        # Tela de Login
 │   ├── auth.php         # Controle de Sessão
 │   └── logout.php       # Sair
-├── assets/              # CSS/JS personalizados (se houver)
-├── uploads/             # Onde os PDFs são salvos
+├── assets/              # CSS/JS personalizados
+├── uploads/             # Raiz de armazenamento (contém .htaccess)
+├── arquivo.php          # (Novo) Proxy seguro para download/visualização
 ├── config.php           # Conexão com Banco de Dados
-├── index.php            # Página Pública (Lista de Diários)
+├── index.php            # Página Pública
 ├── visualizar.php       # Leitor de PDF
 └── README.md            # Documentação
 

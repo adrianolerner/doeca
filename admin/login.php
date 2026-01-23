@@ -2,6 +2,7 @@
 // admin/login.php
 session_start();
 require '../config.php';
+require 'logger.php';
 
 // Se já estiver logado, manda para o painel
 if (isset($_SESSION['usuario_id'])) {
@@ -26,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['usuario_id'] = $usuario['id'];
         $_SESSION['usuario_nome'] = $usuario['nome'];
         $_SESSION['usuario_nivel'] = $usuario['nivel']; // admin ou editor
+        registrarLog($pdo, 'Login', "Painel Admin", "Acesso realizado com sucesso");
         
         header("Location: index.php");
         exit;
