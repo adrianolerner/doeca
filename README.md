@@ -36,18 +36,6 @@ As atualizações recentes elevaram o nível de segurança e funcionalidade do s
 * **Segurança:** Bloqueio de ações críticas por usuários não-admin.
 
 ---
-<img width="1920" height="947" alt="Pagina de Consulta Publica" src="https://github.com/user-attachments/assets/53f9fcba-2600-426b-a23b-52475118d88b" />
----
-<img width="1920" height="947" alt="Tela de Login" src="https://github.com/user-attachments/assets/0e55d556-055c-4085-9373-badd9ddd8c03" />
----
-<img width="1920" height="947" alt="Painel Admin" src="https://github.com/user-attachments/assets/d7405e84-d101-4836-a673-fc1577fecaa2" />
----
-<img width="1920" height="947" alt="Histórico de Alterações" src="https://github.com/user-attachments/assets/5d28f428-54aa-42d2-8201-14919360fc58" />
----
-<img width="1920" height="947" alt="Gerenciar Usuários" src="https://github.com/user-attachments/assets/c6812d45-3949-4c02-af8a-a1630d9fe29c" />
----
-<img width="1920" height="947" alt="Alteração de senha" src="https://github.com/user-attachments/assets/aa0bd6ab-8ed7-48e1-8fc3-9baa07707081" />
----
 
 ## 📸 Telas do Sistema
 
