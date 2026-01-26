@@ -78,7 +78,7 @@ Siga os passos abaixo para colocar o sistema no ar:
 Faça o download dos arquivos e coloque na pasta pública do seu servidor (ex: `htdocs` ou `www`).
 
 ```bash
-git clone https://seu-repositorio/doeca.git
+git clone https://github.com/adrianolerner/doeca.git
 cd doeca
 
 ```
@@ -172,6 +172,15 @@ Dê permissão de escrita nas pastas:
 
 * `uploads/`
 * `importacao/` (Criar manualmente se for usar a ferramenta de importação em lote)
+
+---
+
+### 6. Acesso
+
+Acesse o novo sistema em:
+
+* http://SERVIDOR/doeca/
+* Usuário e Senha Padrão: admin@municipio.gov.br / admin
 
 ---
 
