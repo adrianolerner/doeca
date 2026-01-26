@@ -69,8 +69,10 @@ Para rodar o DOECA, você precisará de um servidor web básico com suporte a PH
 * **Extensões PHP:** `pdo_mysql`, `mbstring`.
 
 ---
+## 📦 Instalação via docker (simplificada):
+https://github.com/adrianolerner/doeca-docker/
 
-## 📦 Instalação
+## 📦 Instalação Manual:
 
 Siga os passos abaixo para colocar o sistema no ar:
 
