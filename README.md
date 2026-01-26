@@ -54,6 +54,7 @@ Esta versão traz ferramentas essenciais para a implantação do sistema em órg
 ### Auditoria e Gestão
 <img width="100%" alt="Histórico de Alterações" src="https://github.com/user-attachments/assets/5d28f428-54aa-42d2-8201-14919360fc58" />
 <img width="100%" alt="Gerenciar Usuários" src="https://github.com/user-attachments/assets/c6812d45-3949-4c02-af8a-a1630d9fe29c" />
+<img width="1920" height="982" alt="Ferramentas" src="https://github.com/user-attachments/assets/e182a1d7-c30b-4dcc-83d4-f15fbcfb32bb" />
 
 ---
 
