@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['limpar_logs'])) {
 <body class="bg-light">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 px-3">
-        <a class="navbar-brand fw-bold" href="#"><i class="fas fa-book-open"></i> DOECA</a>
+        <a class="navbar-brand fw-bold" href="index.php"><i class="fas fa-book-open"></i> DOECA</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -83,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['limpar_logs'])) {
                 <li class="nav-item"><a class="nav-link" href="usuarios.php">Gerenciar Usuários</a></li>
                 <li class="nav-item"><a class="nav-link active fw-bold text-warning" href="historico.php">Auditoria</a>
                 <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="ferramentas.php">Ferramentas</a></li>
                 </li>
             </ul>
             <span class="navbar-text me-3 text-white"><a href="perfil.php"

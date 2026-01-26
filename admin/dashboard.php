@@ -69,7 +69,7 @@ $stmtTermos = $pdo->query($sqlTermos);
 <body class="bg-light">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 px-3" data-html2canvas-ignore="true">
-        <a class="navbar-brand fw-bold" href="#"><i class="fas fa-book-open"></i> DOECA</a>
+        <a class="navbar-brand fw-bold" href="index.php"><i class="fas fa-book-open"></i> DOECA</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -81,6 +81,9 @@ $stmtTermos = $pdo->query($sqlTermos);
                     <li class="nav-item"><a class="nav-link" href="historico.php">Auditoria</a></li>
                 <?php endif; ?>
                 <li class="nav-item"><a class="nav-link active fw-bold text-warning" href="dashboard.php">Dashboard</a></li>
+                <?php if ($_SESSION['usuario_nivel'] === 'admin'): ?>
+                <li class="nav-item"><a class="nav-link" href="ferramentas.php">Ferramentas</a></li>
+                <?php endif; ?>
             </ul>
             <span class="navbar-text me-3 text-white"><a href="perfil.php" class="text-white text-decoration-none"><i class="fas fa-user-circle"></i> Olá, <?php echo htmlspecialchars($_SESSION['usuario_nome']); ?></a></span>
             <a href="logout.php" class="btn btn-outline-danger btn-sm">Sair</a>

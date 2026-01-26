@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
 
                             <div class="d-flex justify-content-between mt-4">
-                                <a href="usuarios.php" class="btn btn-secondary">Cancelar</a>
+                                <a href="usuarios.php" class="btn btn-secondary">Voltar</a>
                                 <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                             </div>
                         </form>

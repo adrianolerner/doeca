@@ -6,16 +6,18 @@ O **DOECA** foi desenvolvido para oferecer uma solução gratuita e de fácil ma
 
 ---
 
-## 🆕 O que há de novo?
+## 🆕 O que há de novo!
 
-As atualizações recentes elevaram o nível de segurança e funcionalidade do sistema:
+Esta versão traz ferramentas essenciais para a implantação do sistema em órgãos que já possuem um histórico de publicações:
 
+* **📦 Central de Migração (Importação em Lote):** Três novas ferramentas para carregar acervos antigos (legado):
+    * **Via CSV:** Importação estruturada usando planilha de dados.
+    * **Automática:** Reconhecimento baseado no nome do arquivo (`AAAA-MM-DD__EDICAO.pdf`).
+    * **Inteligente (OCR):** O sistema lê o cabeçalho dos PDFs para identificar a Data e o Número da Edição automaticamente, mesmo em arquivos com nomes aleatórios.
+* **🔄 Backup e Portabilidade:** Módulo de exportação que gera um arquivo `.ZIP` com todo o acervo. O sistema renomeia os arquivos para um padrão legível e gera um índice CSV automaticamente, facilitando migrações futuras.
 * **📊 Dashboard Gerencial:** Acompanhamento visual de visitas, downloads e termos mais pesquisados com geração de relatório em PDF.
-* **🔍 Busca Full-Text (OCR/Extração):** O sistema agora lê automaticamente o texto dos PDFs no momento do upload. Isso permite que o cidadão pesquise por leis, decretos ou termos específicos dentro do conteúdo dos documentos.
-* **🛡️ Auditoria e Logs:** Novo módulo administrativo que rastreia todas as ações críticas (quem publicou, quem excluiu, IP e data).
-* **🔒 Segurança de Arquivos:** Bloqueio de acesso direto à pasta `uploads`. Os arquivos agora são servidos via proxy seguro (`arquivo.php`), validando o acesso antes do download.
-* **📂 Armazenamento Inteligente:** Os arquivos são salvos em subpastas organizadas por Ano e Mês (ex: `uploads/2024/01/...`), garantindo performance e organização.
-* **👤 Permissões de Usuário:** Diferenciação real entre **Admin** (controle total) e **Editor** (apenas publica/edita).
+* **🔍 Busca Full-Text (OCR/Extração):** O sistema lê automaticamente o texto dos PDFs no upload, permitindo buscas precisas dentro do conteúdo.
+* **📂 Armazenamento Inteligente:** Arquivos salvos em subpastas (`uploads/ANO/MES`), garantindo performance.
 
 ---
 
@@ -25,28 +27,16 @@ As atualizações recentes elevaram o nível de segurança e funcionalidade do s
 * **Busca Inteligente:** Barra de pesquisa estilo "Google" que encontra termos dentro dos PDFs e nos metadados.
 * **Listagem Otimizada:** Exibição clara das edições recentes.
 * **Visualizador Integrado:** Leitura do PDF sem sair do site (layout responsivo).
-* **Download Seguro:** Botão de download protegido.
+* **Download Seguro:** Botão de download protegido via proxy.
 
 ### 🔒 Painel Administrativo
-* Autenticação segura com criptografia de senha (Bcrypt).
+* Autenticação segura com criptografia (Bcrypt).
+* **Ferramentas:** Hub central para importação de legado e exportação de backups.
 * **Dashboard:** Gráficos de acessos, downloads e ranking de pesquisas.
-* **Gestão de Edições:** Upload com extração automática de texto, visualização e exclusão.
-* **Gestão de Usuários:** Cadastro com níveis de permissão.
+* **Gestão de Edições:** Upload, exclusão e visualização.
+* **Gestão de Usuários:** Cadastro com níveis (Admin/Editor).
 * **Auditoria:** Histórico visual (timeline) de todas as alterações.
-* **Segurança:** Bloqueio de ações críticas por usuários não-admin.
 
----
-<img width="1920" height="947" alt="Pagina de Consulta Publica" src="https://github.com/user-attachments/assets/53f9fcba-2600-426b-a23b-52475118d88b" />
----
-<img width="1920" height="947" alt="Tela de Login" src="https://github.com/user-attachments/assets/0e55d556-055c-4085-9373-badd9ddd8c03" />
----
-<img width="1920" height="947" alt="Painel Admin" src="https://github.com/user-attachments/assets/d7405e84-d101-4836-a673-fc1577fecaa2" />
----
-<img width="1920" height="947" alt="Histórico de Alterações" src="https://github.com/user-attachments/assets/5d28f428-54aa-42d2-8201-14919360fc58" />
----
-<img width="1920" height="947" alt="Gerenciar Usuários" src="https://github.com/user-attachments/assets/c6812d45-3949-4c02-af8a-a1630d9fe29c" />
----
-<img width="1920" height="947" alt="Alteração de senha" src="https://github.com/user-attachments/assets/aa0bd6ab-8ed7-48e1-8fc3-9baa07707081" />
 ---
 
 ## 📸 Telas do Sistema
@@ -54,17 +44,16 @@ As atualizações recentes elevaram o nível de segurança e funcionalidade do s
 ### Área Pública
 <img width="100%" alt="Pagina de Consulta Publica" src="https://github.com/user-attachments/assets/53f9fcba-2600-426b-a23b-52475118d88b" />
 
+### Dashboard Gerencial
+<img width="100%" alt="Dashboard" src="https://github.com/user-attachments/assets/80ed9d3d-934e-41f7-9d57-f5d5f1ef4eae" />
+
 ### Login e Painel
 <img width="100%" alt="Tela de Login" src="https://github.com/user-attachments/assets/0e55d556-055c-4085-9373-badd9ddd8c03" />
-
 <img width="100%" alt="Painel Admin" src="https://github.com/user-attachments/assets/d7405e84-d101-4836-a673-fc1577fecaa2" />
 
 ### Auditoria e Gestão
 <img width="100%" alt="Histórico de Alterações" src="https://github.com/user-attachments/assets/5d28f428-54aa-42d2-8201-14919360fc58" />
-
 <img width="100%" alt="Gerenciar Usuários" src="https://github.com/user-attachments/assets/c6812d45-3949-4c02-af8a-a1630d9fe29c" />
-
-<img width="100%" alt="Alteração de senha" src="https://github.com/user-attachments/assets/aa0bd6ab-8ed7-48e1-8fc3-9baa07707081" />
 
 ---
 
@@ -77,8 +66,6 @@ Para rodar o DOECA, você precisará de um servidor web básico com suporte a PH
 * **Servidor Web:** Apache (Recomendado) ou Nginx.
 * **Gerenciador de Dependências:** Composer (para instalar o leitor de PDF).
 * **Extensões PHP:** `pdo_mysql`, `mbstring`.
-
-*O sistema é leve: O banco de dados cresce apenas cerca de 35MB por ano (considerando 360 edições anuais), graças ao armazenamento otimizado de texto.*
 
 ---
 
@@ -97,40 +84,35 @@ cd doeca
 
 ### 2. Instalar Dependências
 
-O sistema utiliza a biblioteca `smalot/pdfparser` para ler o conteúdo dos Diários. É necessário instalá-la via Composer.
-
-Na raiz do projeto, execute:
+O sistema utiliza a biblioteca `smalot/pdfparser`. Instale via Composer na raiz do projeto:
 
 ```bash
 composer install
 
 ```
 
-> **Nota para Hospedagem Compartilhada (cPanel/Hostgator/etc):**
-> Se o seu servidor não tem acesso SSH/Terminal para rodar o Composer, execute o comando acima no seu computador local (Windows/Mac/Linux) e depois faça o upload da pasta `vendor` gerada para o servidor via FTP.
-
 ### 3. Configurar Conexão
 
-1. Renomeie o arquivo `config.example.php` (se houver) para `config.php`.
-2. Abra o arquivo e configure suas credenciais de banco de dados:
+1. Renomeie `config.example.php` para `config.php`.
+2. Configure suas credenciais:
 
 ```php
 $host = 'localhost';
 $db   = 'doeca_db';
-$user = 'root';      // Seu usuário do MySQL
-$pass = 'suasenha';  // Sua senha do MySQL
+$user = 'root';
+$pass = 'suasenha';
 
 ```
 
 ### 4. Criar o Banco de Dados
 
-Acesse seu gerenciador (phpMyAdmin, DBeaver) e rode o script SQL completo abaixo para criar toda a estrutura necessária:
+Rode o script SQL completo no seu gerenciador de banco de dados:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS doeca_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE doeca_db;
 
--- Tabela de Edições (Com suporte a busca Fulltext e Contagem de Visualizações)
+-- Tabela de Edições
 CREATE TABLE edicoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     numero_edicao VARCHAR(50) NOT NULL,
@@ -141,7 +123,6 @@ CREATE TABLE edicoes (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Índice para busca textual ultra-rápida
 ALTER TABLE edicoes ADD FULLTEXT(conteudo_indexado);
 
 -- Tabela de Usuários
@@ -154,7 +135,7 @@ CREATE TABLE usuarios (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Tabela de Logs (Auditoria)
+-- Tabela de Logs
 CREATE TABLE logs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_nome VARCHAR(100),
@@ -165,7 +146,7 @@ CREATE TABLE logs (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Tabelas para o Dashboard (Métricas)
+-- Tabelas Dashboard
 CREATE TABLE visitas_diarias (
     data_visita DATE PRIMARY KEY,
     quantidade INT DEFAULT 0
@@ -184,27 +165,12 @@ INSERT INTO usuarios (nome, email, senha, nivel) VALUES
 
 ```
 
-### 5. Permissões de Pasta
+### 5. Permissões
 
-Certifique-se de que a pasta `uploads/` tenha permissão de **escrita** pelo servidor web.
+Dê permissão de escrita nas pastas:
 
-* **Linux:** `chmod -R 775 uploads/` (ou 777 se necessário).
-* **Windows:** Geralmente a permissão é automática.
-
----
-
-## 🔑 Acesso Inicial
-
-Após a instalação, acesse a área administrativa em:
-`http://seusite/doeca/admin`
-
-Utilize as credenciais padrão:
-
-| Usuário (E-mail) | Senha | Nível |
-| --- | --- | --- |
-| **admin@municipio.gov.br** | **admin** | Administrador |
-
-> **⚠️ Importante:** Por segurança, vá em "Olá, Administrador" > "Alterar Senha" imediatamente após o primeiro login.
+* `uploads/`
+* `importacao/` (Criar manualmente se for usar a ferramenta de importação em lote)
 
 ---
 
@@ -213,24 +179,24 @@ Utilize as credenciais padrão:
 ```text
 /doeca
 ├── admin/
-│   ├── index.php        # Painel Principal (Upload e Extração de Texto)
-│   ├── dashboard.php    # (Novo) Dashboard com Gráficos e Relatórios
-│   ├── editar.php       # Edição de publicações
-│   ├── usuarios.php     # Gerenciamento de Usuários
-│   ├── historico.php    # Auditoria e Logs
-│   ├── logger.php       # Função auxiliar de logs
-│   ├── perfil.php       # Alteração de senha
-│   ├── login.php        # Tela de Login
-│   ├── auth.php         # Controle de Sessão
-│   └── reindexar.php    # Script para indexar PDFs antigos
-├── assets/              # CSS/JS personalizados
-├── uploads/             # Raiz de armazenamento (contém .htaccess de bloqueio)
-├── vendor/              # Bibliotecas externas (instaladas via Composer)
-├── arquivo.php          # Proxy seguro para download/visualização
-├── config.php           # Conexão com Banco de Dados
-├── index.php            # Página Pública (Busca e Listagem)
-├── composer.json        # Definição das dependências
-└── README.md            # Documentação
+│   ├── index.php                 # Lista de Edições
+│   ├── dashboard.php             # Gráficos e Relatórios
+│   ├── ferramentas.php           # (Novo) Hub de Importação/Exportação
+│   ├── importar.php              # Script Importação Automática
+│   ├── importar_csv.php          # Script Importação via CSV
+│   ├── importar_inteligente.php  # Script Importação via OCR (Cabeçalho)
+│   ├── exportar.php              # Script Backup ZIP
+│   ├── usuarios.php              # Gestão de Usuários
+│   ├── historico.php             # Auditoria
+│   ├── ...                       # Outros arquivos do admin
+├── assets/                       # CSS/JS
+├── importacao/                   # Pasta temporária para carga de arquivos
+├── uploads/                      # Armazenamento oficial (Protegido)
+├── vendor/                       # Dependências (Composer)
+├── arquivo.php                   # Proxy de download
+├── config.php                    # Conexão DB
+├── index.php                     # Área Pública
+└── README.md                     # Documentação
 
 ```
 
@@ -238,16 +204,14 @@ Utilize as credenciais padrão:
 
 ## 🤝 Contribuição
 
-Contribuições são bem-vindas! Se você tiver melhorias, correções de bugs ou novas ideias:
-
-1. Faça um Fork do projeto.
-2. Crie uma Branch para sua Feature (`git checkout -b feature/NovaFeature`).
-3. Faça o Commit (`git commit -m 'Adicionando nova feature'`).
-4. Faça o Push (`git push origin feature/NovaFeature`).
-5. Abra um Pull Request.
+1. Faça um Fork.
+2. Crie uma Branch (`git checkout -b feature/NovaFeature`).
+3. Commit (`git commit -m 'Nova feature'`).
+4. Push (`git push origin feature/NovaFeature`).
+5. Pull Request.
 
 ---
 
 ## 📄 Licença
 
-Este projeto é de código aberto, licenciado sob a licença [MIT](https://opensource.org/licenses/MIT). Sinta-se livre para usar, modificar e distribuir em seu município.
+Licença [MIT](https://opensource.org/licenses/MIT). Livre para uso em órgãos públicos.
