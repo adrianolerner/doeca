@@ -17,12 +17,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Banco de dados: `doeca_db`
---
-CREATE DATABASE IF NOT EXISTS `doeca_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `doeca_db`;
-
 -- --------------------------------------------------------
 
 --
