@@ -69,8 +69,11 @@ Para rodar o DOECA, você precisará de um servidor web básico com suporte a PH
 * **Extensões PHP:** `pdo_mysql`, `mbstring`.
 
 ---
-## 📦 Instalação via docker (simplificada):
-https://github.com/adrianolerner/doeca-docker/
+## 📦 Instalação via docker (build):
+[https://github.com/adrianolerner/doeca-docker/](https://github.com/adrianolerner/doeca-docker/)
+
+## 📦 Instalação via docker (usando imagem, método mais simples) - Verificar o funcionamento antes de colocar em produção:
+[https://hub.docker.com/r/albiesek/doeca](https://hub.docker.com/r/albiesek/doeca)
 
 ## 📦 Instalação Manual:
 
@@ -107,7 +110,7 @@ $pass = 'suasenha';
 
 ```
 
-### 4. Criar o Banco de Dados
+### 4. Criar o Banco de Dados (O sistema na versão 0.5.2 possui script de criação do banco automáticamente, neste caso o passo 4 pode ser ignorado, caso não funcione, será necessário seguir este passo para criação)
 
 Rode o script SQL completo no seu gerenciador de banco de dados:
 
@@ -170,10 +173,10 @@ INSERT INTO usuarios (nome, email, senha, nivel) VALUES
 
 ### 5. Permissões
 
-Dê permissão de escrita nas pastas:
+Dê permissão de escrita nas pastas ("sudo chown -R www-data:www-data" ou equivalente e "sudo chmod 775 -R"):
 
 * `uploads/`
-* `importacao/` (Criar manualmente se for usar a ferramenta de importação em lote)
+* `importacao/` (se for usar a ferramenta de importação em lote)
 
 ---
 

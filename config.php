@@ -1,9 +1,19 @@
 <?php
 
+// Preecher com os dados de acesso do seu banco de dados
 $host = 'localhost';
-$db   = 'doeca_db';
+$db = 'doeca_db';
 $user = 'root';
 $pass = '';
+
+//Caso queira usar variáveis de ambiente para os dados de acesso ao banco pode ser criadas as variáveis em seu servidor web e configurado no bloco abaixo, descomentando-o e comentando o bloco acima:
+
+/**
+ * $host = getenv('DB_HOST') ?: 'localhost';
+ * $db   = getenv('DB_NAME') ?: 'doeca_db';
+ * $user = getenv('DB_USER') ?: 'root';
+ * $pass = getenv('DB_PASS') ?: '';
+ */
 
 try {
     // Adicionamos as opções para garantir codificação correta e erros visíveis
@@ -25,17 +35,17 @@ try {
     }
 
     if (!$tabelaExiste) {
-        $sqlFile = __DIR__ . '/setup.sql'; 
-        
+        $sqlFile = __DIR__ . '/setup.sql';
+
         if (file_exists($sqlFile)) {
             // Lê o arquivo SQL
             $sql = file_get_contents($sqlFile);
-            
+
             // Tenta executar o Dump inteiro
             try {
                 $pdo->exec($sql);
                 error_log("Sucesso: Tabelas importadas automaticamente.");
-                
+
                 // Remove o arquivo após o sucesso
                 if (is_writable($sqlFile)) {
                     unlink($sqlFile);
