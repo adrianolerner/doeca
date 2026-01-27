@@ -110,7 +110,7 @@ $pass = 'suasenha';
 
 ```
 
-### 4. Criar o Banco de Dados
+### 4. Criar o Banco de Dados (O sistema na versão 0.5.2 possui script de criação do banco automáticamente, neste caso o passo 4 pode ser ignorado, caso não funcione, será necessário seguir este passo para criação)
 
 Rode o script SQL completo no seu gerenciador de banco de dados:
 
@@ -173,10 +173,10 @@ INSERT INTO usuarios (nome, email, senha, nivel) VALUES
 
 ### 5. Permissões
 
-Dê permissão de escrita nas pastas:
+Dê permissão de escrita nas pastas ("sudo chown -R www-data:www-data" ou equivalente e "sudo chmod 775 -R"):
 
 * `uploads/`
-* `importacao/` (Criar manualmente se for usar a ferramenta de importação em lote)
+* `importacao/` (se for usar a ferramenta de importação em lote)
 
 ---
 
