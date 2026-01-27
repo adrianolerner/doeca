@@ -99,7 +99,7 @@ composer install
 
 ### 3. Configurar Conexão
 
-1. Renomeie `config.example.php` para `config.php`.
+1. Edite o arquivo `config.php`.
 2. Configure suas credenciais (você pode usar variáveis de ambiente aqui ao invés de manter as credenciais no arquivo, siga as instruções do arquivo config.php):
 
 ```php
