@@ -36,6 +36,7 @@ Esta versão traz ferramentas essenciais para a implantação do sistema em órg
 * **Gestão de Edições:** Upload, exclusão e visualização.
 * **Gestão de Usuários:** Cadastro com níveis (Admin/Editor).
 * **Auditoria:** Histórico visual (timeline) de todas as alterações.
+* **Segurança:** Proteção do login com rate limit e Cloudflare Turnstile.
 
 ---
 
@@ -109,6 +110,9 @@ $host = 'localhost';
 $db   = 'doeca_db';
 $user = 'root';
 $pass = 'suasenha';
+
+$cf_site_key = 'SEU_SITE_KEY_AQUI';
+$cf_secret_key = 'SEU_SECRET_KEY_AQUI';
 
 ```
 
