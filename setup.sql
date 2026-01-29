@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 26/01/2026 às 17:35
+-- Tempo de geração: 29/01/2026 às 19:46
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -16,6 +16,10 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Banco de dados: `doeca_db`
+--
 
 -- --------------------------------------------------------
 
@@ -31,6 +35,18 @@ CREATE TABLE `edicoes` (
   `criado_em` timestamp NOT NULL DEFAULT current_timestamp(),
   `conteudo_indexado` longtext DEFAULT NULL,
   `visualizacoes` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `login_tentativas`
+--
+
+CREATE TABLE `login_tentativas` (
+  `id` int(99) NOT NULL,
+  `ip_address` varchar(45) NOT NULL,
+  `tentativa_em` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -108,6 +124,12 @@ ALTER TABLE `edicoes`
 ALTER TABLE `edicoes` ADD FULLTEXT KEY `conteudo_indexado` (`conteudo_indexado`);
 
 --
+-- Índices de tabela `login_tentativas`
+--
+ALTER TABLE `login_tentativas`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Índices de tabela `logs`
 --
 ALTER TABLE `logs`
@@ -141,19 +163,25 @@ ALTER TABLE `visitas_diarias`
 -- AUTO_INCREMENT de tabela `edicoes`
 --
 ALTER TABLE `edicoes`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de tabela `login_tentativas`
+--
+ALTER TABLE `login_tentativas`
+  MODIFY `id` int(99) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `termos_pesquisados`
 --
 ALTER TABLE `termos_pesquisados`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`
