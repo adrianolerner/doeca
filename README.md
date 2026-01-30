@@ -195,6 +195,10 @@ Acesse o novo sistema em:
 
 ---
 
+OBS.: O sistema de login usa o captcha do Cloudflare, o Turnstile, é necessário configurar o mesmo no arquivo docker-compose.yml, você pode criar uma conta gratuita e usar em até 10 sites sem custos. Lembrando que para funcionar é necesssário ter um domínio válido e estar corretamente apontado para este container, caso contrário, será impossibilitado de fazer login.
+
+---
+
 ## 📂 Estrutura de Arquivos
 
 ```text
