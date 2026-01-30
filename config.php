@@ -6,6 +6,13 @@ $host = 'localhost';
 $db = 'doeca_db';
 $user = 'root';
 $pass = '';
+// Use a configuração abaixo para ambientes com váriáveis de ambiente:
+/*
+*$host = getenv('DB_HOST') ?: 'localhost';
+*$db   = getenv('DB_NAME') ?: 'doeca_db';
+*$user = getenv('DB_USER') ?: 'root';
+*$pass = getenv('DB_PASS') ?: '';
+*/
 
 // 2. Configurações do Cloudflare Turnstile (Ambiente ou Vazio para Dev)
 // Se estiver no Docker, pega do ENV. Se for XAMPP local, fica vazio (o login.php fará o bypass)
