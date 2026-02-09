@@ -10,7 +10,8 @@ if (!isset($_SESSION['usuario_id'])) {
 }
 
 // Função auxiliar para verificar se é admin (para proteger páginas exclusivas)
-function verificarAdmin() {
+function verificarAdmin()
+{
     if ($_SESSION['usuario_nivel'] !== 'admin') {
         die('<div class="container mt-5"><div class="alert alert-danger">Acesso Negado: Apenas administradores podem acessar esta página. <a href="index.php">Voltar</a></div></div>');
     }
